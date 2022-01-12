@@ -52,13 +52,16 @@ if ($env:SystemDrive -eq 'X:')
         Move-Item -Path "$env:TEMP\1.4.7" -Destination "$env:ProgramFiles\WindowsPowerShell\Modules\PackageManagement\1.4.7"
         }
     
-    Write-Verbose -Verbose 'Importing Modules'
+    #Register-PSRepository -Name PSGallery -SourceLocation https://www.powershellgallery.com/api/v2/ -InstallationPolicy Trusted
+
+    Write-Verbose -Verbose 'Importing PowerShellGet and PackageManagement PowerShell Modules'
     Import-Module PowerShellGet -Force
     Import-Module PackageManagement -Force
+
+    Write-Verbose -Verbose 'Installing OSD PowerShell Module'
     Install-Module OSD -Force
     Import-Module OSD -Force
     
-    #Register-PSRepository -Name PSGallery -SourceLocation https://www.powershellgallery.com/api/v2/ -InstallationPolicy Trusted
     Write-Verbose -Verbose 'Starting OSDCloud'
     Start-OSDCloudGUI
 }
