@@ -24,6 +24,11 @@ $PowerShellProfile = @'
 [System.Environment]::SetEnvironmentVariable('LOCALAPPDATA',"$env:UserProfile\AppData\Local")
 '@
 
+    if (-not (Test-Path "$env:UserProfile\Documents\WindowsPowerShell"))
+    {
+        $null = New-Item -Path "$env:UserProfile\Documents\WindowsPowerShell" -ItemType Directory -Force -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
+    }
+
     Write-Verbose 'Set PowerShell Profile for this WinPE Session'
     $PowerShellProfile | Set-Content -Path "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Force -Encoding Unicode
 }
@@ -43,7 +48,7 @@ function Install-WinPENuget
     $nugetExeBasePath = $PSGetProgramDataPath
     if (-not (Test-Path -Path $nugetExeBasePath))
     {
-        $null = New-Item -Path $nugetExeBasePath -ItemType Directory -Force -ErrorAction SilentlyContinue -WarningAction SilentlyContinue -Confirm:$false -WhatIf:$false
+        $null = New-Item -Path $nugetExeBasePath -ItemType Directory -Force -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
     }
     $nugetExeFilePath = Join-Path -Path $nugetExeBasePath -ChildPath $NuGetExeName
     $null = Invoke-WebRequest -Uri $NuGetClientSourceURL -OutFile $nugetExeFilePath
@@ -53,7 +58,7 @@ function Install-WinPENuget
 
     if (-not (Test-Path -Path $nugetExeBasePath))
     {
-        $null = New-Item -Path $nugetExeBasePath -ItemType Directory -Force -ErrorAction SilentlyContinue -WarningAction SilentlyContinue -Confirm:$false -WhatIf:$false
+        $null = New-Item -Path $nugetExeBasePath -ItemType Directory -Force -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
     }
     $nugetExeFilePath = Join-Path -Path $nugetExeBasePath -ChildPath $NuGetExeName
     $null = Invoke-WebRequest -Uri $NuGetClientSourceURL -OutFile $nugetExeFilePath
