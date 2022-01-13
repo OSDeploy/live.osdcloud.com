@@ -22,24 +22,13 @@ function Set-WinPELocalAppData
         $PowerShellProfile | Set-Content -Path "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Force -Encoding Unicode
     }
 }
-function Install-WinPEPowerShellGet
-{
-    [CmdletBinding()]
-    param()
-    if (!(Get-Module -Name PowerShellGet)){
-        $PowerShellGetURL = "https://psg-prod-eastus.azureedge.net/packages/powershellget.2.2.5.nupkg"
-        Invoke-WebRequest -UseBasicParsing -Uri $PowerShellGetURL -OutFile "$env:TEMP\powershellget.2.2.5.zip"
-        $Null = New-Item -Path "$env:TEMP\2.2.5" -ItemType Directory -Force
-        Expand-Archive -Path "$env:TEMP\powershellget.2.2.5.zip" -DestinationPath "$env:TEMP\2.2.5"
-        $Null = New-Item -Path "$env:ProgramFiles\WindowsPowerShell\Modules\PowerShellGet" -ItemType Directory -ErrorAction SilentlyContinue
-        Move-Item -Path "$env:TEMP\2.2.5" -Destination "$env:ProgramFiles\WindowsPowerShell\Modules\PowerShellGet\2.2.5"
-        Import-Module PowerShellGet -Force
-    }
-}
 function Install-WinPEPackageManagement
 {
     [CmdletBinding()]
     param()
+    
+    Set-WinPELocalAppData
+
     if (!(Get-Module -Name PackageManagement)){
         $PackageManagementURL = "https://psg-prod-eastus.azureedge.net/packages/packagemanagement.1.4.7.nupkg"
         Invoke-WebRequest -UseBasicParsing -Uri $PackageManagementURL -OutFile "$env:TEMP\packagemanagement.1.4.7.zip"
@@ -48,6 +37,23 @@ function Install-WinPEPackageManagement
         $Null = New-Item -Path "$env:ProgramFiles\WindowsPowerShell\Modules\PackageManagement" -ItemType Directory -ErrorAction SilentlyContinue
         Move-Item -Path "$env:TEMP\1.4.7" -Destination "$env:ProgramFiles\WindowsPowerShell\Modules\PackageManagement\1.4.7"
         Import-Module PackageManagement -Force
+    }
+}
+function Install-WinPEPowerShellGet
+{
+    [CmdletBinding()]
+    param()
+
+    Set-WinPELocalAppData
+
+    if (!(Get-Module -Name PowerShellGet)){
+        $PowerShellGetURL = "https://psg-prod-eastus.azureedge.net/packages/powershellget.2.2.5.nupkg"
+        Invoke-WebRequest -UseBasicParsing -Uri $PowerShellGetURL -OutFile "$env:TEMP\powershellget.2.2.5.zip"
+        $Null = New-Item -Path "$env:TEMP\2.2.5" -ItemType Directory -Force
+        Expand-Archive -Path "$env:TEMP\powershellget.2.2.5.zip" -DestinationPath "$env:TEMP\2.2.5"
+        $Null = New-Item -Path "$env:ProgramFiles\WindowsPowerShell\Modules\PowerShellGet" -ItemType Directory -ErrorAction SilentlyContinue
+        Move-Item -Path "$env:TEMP\2.2.5" -Destination "$env:ProgramFiles\WindowsPowerShell\Modules\PowerShellGet\2.2.5"
+        Import-Module PowerShellGet -Force
 
         $PSRepository = Get-PSRepository -Name PSGallery
 
