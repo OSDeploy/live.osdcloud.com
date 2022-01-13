@@ -123,12 +123,28 @@ if ($env:SystemDrive -eq 'X:')
 
     $script:PSGetProgramDataPath = Microsoft.PowerShell.Management\Join-Path -Path $env:ProgramData -ChildPath 'Microsoft\Windows\PowerShell\PowerShellGet\'
     $nugetExeBasePath = $script:PSGetProgramDataPath
+    if(-not (Microsoft.PowerShell.Management\Test-Path -Path $nugetExeBasePath))
+    {
+        $null = Microsoft.PowerShell.Management\New-Item -Path $nugetExeBasePath `
+                                                         -ItemType Directory -Force `
+                                                         -ErrorAction SilentlyContinue `
+                                                         -WarningAction SilentlyContinue `
+                                                         -Confirm:$false -WhatIf:$false
+    }
     $nugetExeFilePath = Microsoft.PowerShell.Management\Join-Path -Path $nugetExeBasePath -ChildPath $script:NuGetExeName
     # Download the NuGet.exe from http://nuget.org/NuGet.exe
     $null = Microsoft.PowerShell.Utility\Invoke-WebRequest -Uri $script:NuGetClientSourceURL -OutFile $nugetExeFilePath
 
     $script:PSGetAppLocalPath = Microsoft.PowerShell.Management\Join-Path -Path $env:LOCALAPPDATA -ChildPath 'Microsoft\Windows\PowerShell\PowerShellGet\'
     $nugetExeBasePath = $script:PSGetAppLocalPath
+    if(-not (Microsoft.PowerShell.Management\Test-Path -Path $nugetExeBasePath))
+    {
+        $null = Microsoft.PowerShell.Management\New-Item -Path $nugetExeBasePath `
+                                                         -ItemType Directory -Force `
+                                                         -ErrorAction SilentlyContinue `
+                                                         -WarningAction SilentlyContinue `
+                                                         -Confirm:$false -WhatIf:$false
+    }
     $nugetExeFilePath = Microsoft.PowerShell.Management\Join-Path -Path $nugetExeBasePath -ChildPath $script:NuGetExeName
     # Download the NuGet.exe from http://nuget.org/NuGet.exe
     $null = Microsoft.PowerShell.Utility\Invoke-WebRequest -Uri $script:NuGetClientSourceURL -OutFile $nugetExeFilePath
