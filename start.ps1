@@ -139,8 +139,10 @@ if ($env:SystemDrive -eq 'X:')
     Install-WinPEPowerShellGet
     Set-WinPEPSGallery
     Install-WinPECurl
+    Install-Module OSD -Force
     if (!(Get-Command 'curl.exe' -ErrorAction SilentlyContinue))
     {
         Write-Warning 'curl.exe is missing from WinPE. This is required for OSDCloud to function'
     }
+    Start-OSDCloudGUI
 }
