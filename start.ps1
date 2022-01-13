@@ -149,12 +149,17 @@ if ($env:SystemDrive -eq 'X:')
     # Download the NuGet.exe from http://nuget.org/NuGet.exe
     $null = Microsoft.PowerShell.Utility\Invoke-WebRequest -Uri $script:NuGetClientSourceURL -OutFile $nugetExeFilePath
 
+    Install-WinPEPackageManagement
+    Install-WinPEPowerShellGet
+    Set-WinPEPSGallery
+    #Register-PackageSource -Name Nuget -Location 'http://www.nuget.org/api/v2' -ProviderName Nuget -Trusted
+
     #Find-PackageProvider -Name PowerShellGet | Install-PackageProvider -Force
     #Find-PackageProvider -Name Nuget | Install-PackageProvider -Force
+    #Get-PackageProvider Nuget -ForceBootstrap
 
-    Get-PackageProvider Nuget -ForceBootstrap
-
-    #Install-WinPEPackageManagement
-    #Set-WinPEPSGallery
-    Get-Command -Name *WinPE*
+    if (!(Get-Command 'curl.exe' -ErrorAction SilentlyContinue))
+    {
+        Write-Warning 'live.osdcloud.com does not include curl.exe'
+    }
 }
