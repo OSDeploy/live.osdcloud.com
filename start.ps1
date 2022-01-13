@@ -160,6 +160,6 @@ if ($env:SystemDrive -eq 'X:')
 
     if (!(Get-Command 'curl.exe' -ErrorAction SilentlyContinue))
     {
-        Write-Warning 'live.osdcloud.com does not include curl.exe'
+        Write-Warning 'live.osdcloud.com does not include curl.exe yet so you will not be able to use OSDCloud'
     }
 }
