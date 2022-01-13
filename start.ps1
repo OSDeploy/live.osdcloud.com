@@ -18,6 +18,11 @@ function Set-WinPELocalAppData
             New-Item -Path "$env:UserProfile\Documents\WindowsPowerShell" -ItemType Directory -Force | Out-Null
         }
 
+# WinPE PowerShell Profile
+$PowerShellProfile = @'
+[System.Environment]::SetEnvironmentVariable('LOCALAPPDATA',"$env:UserProfile\AppData\Local")
+'@
+
         Write-Verbose -Verbose 'Set PowerShell Profile for this WinPE Session'
         $PowerShellProfile | Set-Content -Path "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Force -Encoding Unicode
     }
