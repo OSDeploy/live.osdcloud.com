@@ -129,16 +129,25 @@ function Install-WinPECurl
 
 if ($env:SystemDrive -eq 'X:')
 {
-    Write-Verbose -Verbose 'https://github.com/OSDeploy/live.osdcloud.com'
-    Write-Verbose -Verbose 'Version 22.1.13.1 BETA'
-    Set-ExecutionPolicy Bypass -Force -Verbose
+    Write-Host -ForegroundColor Cyan 'https://github.com/OSDeploy/live.osdcloud.com'
+    Write-Host -ForegroundColor Cyan 'Version 22.1.13.1 BETA'
+    Write-Host -ForegroundColor Cyan 'Set Execution Policy'
+    Set-ExecutionPolicy Bypass -Force
+    Write-Host -ForegroundColor Cyan 'Set Environment LocalAppData'
     Set-WinPELocalAppData
+    Write-Host -ForegroundColor Cyan 'Set Profile LocalAppData'
     Set-WinPEPSProfile
+    Write-Host -ForegroundColor Cyan 'Install Nuget.exe'
     Install-WinPENuget
+    Write-Host -ForegroundColor Cyan 'Install PackageManagement'
     Install-WinPEPackageManagement
+    Write-Host -ForegroundColor Cyan 'Install PowerShellGet'
     Install-WinPEPowerShellGet
+    Write-Host -ForegroundColor Cyan 'Trust PSGallery'
     Set-WinPEPSGallery
+    Write-Host -ForegroundColor Cyan 'Install Curl.exe'
     Install-WinPECurl
+    Write-Host -ForegroundColor Cyan 'Install OSD Module'
     Install-Module OSD -Force
     if (!(Get-Command 'curl.exe' -ErrorAction SilentlyContinue))
     {
