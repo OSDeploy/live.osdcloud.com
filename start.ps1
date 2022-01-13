@@ -23,7 +23,7 @@ $PowerShellProfile = @'
 [System.Environment]::SetEnvironmentVariable('LOCALAPPDATA',"$env:UserProfile\AppData\Local")
 '@
 
-        Write-Verbose -Verbose 'Set PowerShell Profile for this WinPE Session'
+        Write-Verbose 'Set PowerShell Profile for this WinPE Session'
         $PowerShellProfile | Set-Content -Path "$env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Force -Encoding Unicode
     }
 }
@@ -75,7 +75,16 @@ function Set-WinPEPSGallery
 {
     [CmdletBinding()]
     param()
-    Register-PSRepository -Name PSGallery -SourceLocation https://www.powershellgallery.com/api/v2/ -InstallationPolicy Trusted
+
+    $PSRepository = Get-PSRepository -Name PSGallery
+
+    if ($PSRepository)
+    {
+        if ($PSRepository.InstallationPolicy -ne 'Trusted')
+        {
+            Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+        }
+    }
 }
 
 function Install-WinPEOSDModule
@@ -102,5 +111,27 @@ if ($env:SystemDrive -eq 'X:')
     Write-Verbose -Verbose 'https://github.com/OSDeploy/live.osdcloud.com'
     Write-Verbose -Verbose 'Version 22.1.12.1'
     Set-ExecutionPolicy Bypass -Force -Verbose
+    Set-WinPELocalAppData
+
+    $script:NuGetBinaryProgramDataPath="$env:ProgramFiles\PackageManagement\ProviderAssemblies"
+    $script:NuGetBinaryLocalAppDataPath="$env:LOCALAPPDATA\PackageManagement\ProviderAssemblies"
+    # go fwlink for 'https://nuget.org/nuget.exe'
+    $script:NuGetClientSourceURL = 'https://go.microsoft.com/fwlink/?LinkID=690216&clcid=0x409'
+    $script:NuGetExeName = 'NuGet.exe'
+    $script:NuGetExePath = $null
+    $script:NuGetProvider = $null
+
+    $script:PSGetProgramDataPath = Microsoft.PowerShell.Management\Join-Path -Path $env:ProgramData -ChildPath 'Microsoft\Windows\PowerShell\PowerShellGet\'
+    $nugetExeBasePath = $script:PSGetProgramDataPath
+    $nugetExeFilePath = Microsoft.PowerShell.Management\Join-Path -Path $nugetExeBasePath -ChildPath $script:NuGetExeName
+    # Download the NuGet.exe from http://nuget.org/NuGet.exe
+    $null = Microsoft.PowerShell.Utility\Invoke-WebRequest -Uri $script:NuGetClientSourceURL -OutFile $nugetExeFilePath
+
+    $script:PSGetAppLocalPath = Microsoft.PowerShell.Management\Join-Path -Path $env:LOCALAPPDATA -ChildPath 'Microsoft\Windows\PowerShell\PowerShellGet\'
+    $nugetExeBasePath = $script:PSGetAppLocalPath
+    $nugetExeFilePath = Microsoft.PowerShell.Management\Join-Path -Path $nugetExeBasePath -ChildPath $script:NuGetExeName
+    # Download the NuGet.exe from http://nuget.org/NuGet.exe
+    $null = Microsoft.PowerShell.Utility\Invoke-WebRequest -Uri $script:NuGetClientSourceURL -OutFile $nugetExeFilePath
+
     Get-Command -Name *WinPE*
 }
