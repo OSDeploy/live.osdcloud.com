@@ -101,8 +101,8 @@ function Install-WinPEPSGallery
     param()
 
     Set-WinPELocalAppData
-    Install-WinPEPowerShellGet
     Install-WinPEPackageManagement
+    Install-WinPEPowerShellGet
     Set-WinPEPSGallery
 }
 
@@ -149,5 +149,12 @@ if ($env:SystemDrive -eq 'X:')
     # Download the NuGet.exe from http://nuget.org/NuGet.exe
     $null = Microsoft.PowerShell.Utility\Invoke-WebRequest -Uri $script:NuGetClientSourceURL -OutFile $nugetExeFilePath
 
+    #Find-PackageProvider -Name PowerShellGet | Install-PackageProvider -Force
+    #Find-PackageProvider -Name Nuget | Install-PackageProvider -Force
+
+    Get-PackageProvider Nuget -ForceBootstrap
+
+    #Install-WinPEPackageManagement
+    #Set-WinPEPSGallery
     Get-Command -Name *WinPE*
 }
