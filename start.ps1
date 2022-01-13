@@ -48,6 +48,16 @@ function Install-WinPEPackageManagement
         $Null = New-Item -Path "$env:ProgramFiles\WindowsPowerShell\Modules\PackageManagement" -ItemType Directory -ErrorAction SilentlyContinue
         Move-Item -Path "$env:TEMP\1.4.7" -Destination "$env:ProgramFiles\WindowsPowerShell\Modules\PackageManagement\1.4.7"
         Import-Module PackageManagement -Force
+
+        $PSRepository = Get-PSRepository -Name PSGallery
+
+        if ($PSRepository)
+        {
+            if ($PSRepository.InstallationPolicy -ne 'Trusted')
+            {
+                Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+            }
+        }
     }
 }
 function Set-WinPEPSGallery
