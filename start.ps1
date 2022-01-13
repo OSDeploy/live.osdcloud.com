@@ -130,7 +130,7 @@ function Install-WinPECurl
 if ($env:SystemDrive -eq 'X:')
 {
     Write-Verbose -Verbose 'https://github.com/OSDeploy/live.osdcloud.com'
-    Write-Verbose -Verbose 'Version 22.1.13.1'
+    Write-Verbose -Verbose 'Version 22.1.13.1 BETA'
     Set-ExecutionPolicy Bypass -Force -Verbose
     Set-WinPELocalAppData
     Set-WinPEPSProfile
