@@ -1,0 +1,6 @@
+{
+    "mimeTypes": {
+        ".json": "text/json",
+        ".ps1": "text/plain"
+    }
+}
