@@ -1,5 +1,7 @@
 {
     "mimeTypes": {
+        ".htm": "text/plain",
+        ".html": "text/plain",
         ".json": "text/json",
         ".ps1": "text/plain"
     }
